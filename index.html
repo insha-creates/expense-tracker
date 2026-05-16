@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Expense Tracker</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<script>
+
+function toggleMode(){
+
+    document.body.classList.toggle("dark");
+
+}
+
+</script>
+
+<body>
+    <button class="toggle-btn" onclick="toggleMode()">
+    🌙 Dark Mode
+</button>
+
+<div class="container">
+
+    <h1>✨ Expense Tracker ✨</h1>
+
+    {% with messages = get_flashed_messages() %}
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
+
+    <div class="summary">
+
+        <div class="card">
+            <h3>Total Expenses</h3>
+            <p>₹ {{ total }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Entries</h3>
+            <p>{{ expenses|length }}</p>
+        </div>
+
+    </div>
+
+    <form action="/add" method="POST">
+
+        <input type="text"
+               name="title"
+               placeholder="Expense Title"
+               required>
+
+        <input type="number"
+               name="amount"
+               placeholder="Amount"
+               required>
+
+        <select name="category" required>
+
+            <option value="">Select Category</option>
+
+            <option>Food</option>
+            <option>Travel</option>
+            <option>Shopping</option>
+            <option>Bills</option>
+            <option>Entertainment</option>
+
+        </select>
+
+        <input type="date"
+               name="date"
+               required>
+
+        <button type="submit">
+            Add Expense
+        </button>
+
+    </form>
+
+    <div class="expense-grid">
+
+    {% for expense in expenses %}
+
+    <div class="expense-card">
+
+        <h3>{{ expense[1] }}</h3>
+
+        <p>💰 ₹ {{ expense[2] }}</p>
+
+        <p>📂 {{ expense[3] }}</p>
+
+        <p>📅 {{ expense[4] }}</p>
+
+        <div class="actions">
+
+            <a href="/edit/{{ expense[0] }}">
+                Edit
+            </a>
+
+            <a href="/delete/{{ expense[0] }}">
+                Delete
+            </a>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>
